@@ -5,6 +5,13 @@ import Users from "../pages/Dashboard/Users/Users";
 import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
 import PrivateRoute from "./PrivateRoute";
+import PaymentHistory from "../pages/PaymentHistory/PaymentHistory";
+import SendMoney from "../pages/SendMoney/SendMoney";
+import CashOut from "../pages/CashOut/CashOut";
+import CashIn from "../pages/CashIn/CashIn";
+import TransactionManagement from "../pages/TransactionManagement/TransactionManagement";
+import AllTransaction from "../pages/AllTransaction/AllTransaction";
+import AdminPrivateRoute from "./AdminPrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +30,34 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/users",
         element: <Users />,
+      },
+      {
+        path: "/transaction/history",
+        element: <PaymentHistory />,
+      },
+      {
+        path: "/all-transaction",
+        element: (
+          <AdminPrivateRoute>
+            <AllTransaction />
+          </AdminPrivateRoute>
+        ),
+      },
+      {
+        path: "/send-money",
+        element: <SendMoney />,
+      },
+      {
+        path: "/cash-out",
+        element: <CashOut />,
+      },
+      {
+        path: "/transaction-manage",
+        element: <TransactionManagement />,
+      },
+      {
+        path: "/cash-in",
+        element: <CashIn />,
       },
     ],
   },
