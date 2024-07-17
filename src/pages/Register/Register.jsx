@@ -25,6 +25,8 @@ const Register = () => {
       mobile,
       email,
       accountType,
+      status: "pending",
+      balance: 0,
     };
     try {
       const { data } = await axios.post(

@@ -1,6 +1,40 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toastAlert } from "../../helper/helper";
+import axios from "axios";
 
 const Login = () => {
+  const navigate = useNavigate();
+  // handleSubmitLogin
+  const handleSubmitLogin = async (e) => {
+    e.preventDefault();
+    const numberAndEmail = e.target.numberAndEmail.value;
+    const pin = e.target.pin.value;
+    const userInfo = { numberAndEmail, pin };
+    // Filed Validation
+    if (!numberAndEmail || !pin) {
+      return toastAlert("All Fields Are Required", "error");
+    }
+
+    // Pin Check
+    if (pin.length < 5) return toastAlert("Pin Must 5 Digit", "error");
+
+    try {
+      const { data } = await axios.post(
+        `${import.meta.env.VITE_API_URL}/user/login`,
+        userInfo,
+        {
+          withCredentials: true,
+        }
+      );
+      if (data) {
+        toastAlert(data.message, "success");
+        localStorage.setItem("name", numberAndEmail);
+        navigate("/");
+      }
+    } catch (error) {
+      toastAlert(error?.response?.data?.error, "error");
+    }
+  };
   return (
     <div className="w-full h-screen py-5 flex justify-center items-center bg-gray-900">
       <div className="flex flex-col p-6 rounded-md sm:p-10  text-gray-100 border border-gray-700 shadow-xl">
@@ -12,22 +46,22 @@ const Login = () => {
         </div>
 
         {/* User Form */}
-        <form noValidate="" action="" className="space-y-12">
+        <form noValidate="" onSubmit={handleSubmitLogin} className="space-y-12">
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block mb-2 text-sm">
+              <label htmlFor="numberAndEmail" className="block mb-2 text-sm">
                 Mobile Or Email
               </label>
               <input
                 type="text"
-                name="pin"
-                id="email"
+                name="numberAndEmail"
+                id="numberAndEmail"
                 placeholder="Mobile Number Or Email"
                 className="w-full px-3 py-2 border rounded-md border-gray-700 bg-gray-900 text-gray-100 outline-none focus:border-rose-700 transition-all duration-200"
               />
             </div>
             <div>
-              <label htmlFor="email" className="block mb-2 text-sm">
+              <label htmlFor="pin" className="block mb-2 text-sm">
                 Pin
               </label>
               <input
@@ -42,7 +76,7 @@ const Login = () => {
           <div className="space-y-2">
             <div>
               <button
-                type="button"
+                type="submit"
                 className="w-full px-8 py-3 font-semibold rounded-md bg-rose-700 text-white"
               >
                 Sign in

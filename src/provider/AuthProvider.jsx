@@ -1,64 +1,24 @@
 import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 export const AuthContext = createContext(null);
-import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-  updateProfile,
-} from "firebase/auth";
-import auth from "../firebase/firebase.config";
+
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const createUser = (email, password) => {
-    setLoading(true);
-    return createUserWithEmailAndPassword(auth, email, password);
-  };
-
-  const signIn = (email, password) => {
-    setLoading(true);
-    return signInWithEmailAndPassword(auth, email, password);
-  };
-
-  const logOut = async () => {
-    setLoading(true);
-    return signOut(auth);
-  };
-
-  const updateUserProfile = (name, photo) => {
-    return updateProfile(auth.currentUser, {
-      displayName: name,
-      photoURL: photo,
-    });
-  };
-
-  // onAuthStateChange
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      if (currentUser) {
-        setUser(currentUser);
-        setLoading(false);
-      } else {
-        setLoading(false);
-        setUser(null);
-      }
-    });
-    return () => {
-      return unsubscribe;
-    };
-  }, []);
+  const { data: auth, isLoading } = useQuery({
+    queryKey: ["auth"],
+    queryFn: async () => {
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_API_URL}/logged/in/user`,
+        { withCredentials: true }
+      );
+      return data;
+    },
+  });
 
   const authInfo = {
-    user,
-    setUser,
-    loading,
-    setLoading,
-    createUser,
-    signIn,
-    logOut,
-    updateUserProfile,
+    auth,
+    isLoading,
   };
   return (
     <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>

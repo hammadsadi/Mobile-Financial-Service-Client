@@ -4,15 +4,21 @@ import Dashboard from "../pages/Dashboard/Dashboard/Dashboard";
 import Users from "../pages/Dashboard/Users/Users";
 import Register from "../pages/Register/Register";
 import Login from "../pages/Login/Login";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
-    path: "/dashboard",
+    path: "/",
     element: <DashboardLayout />,
     children: [
       {
-        path: "/dashboard",
-        element: <Dashboard />,
+        path: "/",
+        element: (
+          <PrivateRoute>
+            {" "}
+            <Dashboard />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/dashboard/users",
