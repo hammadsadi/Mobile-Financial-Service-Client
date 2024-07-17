@@ -52,8 +52,8 @@ const Dashboard = () => {
         <div className="flex flex-col items-center justify-center text-center bg-gray-900 shadow-xl">
           <input
             type={`${checkBalance ? "text" : "password"}`}
-            value={auth?.balance}
-            className="w-28 outline-none text-5xl bg-gray-900 text-white p-2 font-bold"
+            value={`${auth?.balance} Tk`}
+            className="w-64 outline-none text-5xl bg-gray-900 text-white p-2 font-bold"
             readOnly
           />
 
